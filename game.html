@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Press Start 2P', cursive;
+            user-select: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #007bff;
+        }
+
+        #result {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            min-height: 1.5em; /* Reserve space to avoid layout shift */
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .button {
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .score {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+       #message-box {
+            position: fixed; /* Use fixed positioning */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none; /* Allows clicks to pass through */
+        }
+
+        .show-message {
+            opacity: 1;
+            pointer-events: auto; /* Make the message box interactive when visible */
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none; /* Disable clicks during fade out */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rock Paper Scissors</h1>
+        <div class="score">
+            Player: <span id="player-score">0</span>  Computer: <span id="computer-score">0</span>
+        </div>
+        <div id="result"></div>
+        <div class="buttons">
+            <button class="button" id="rock">Rock</button>
+            <button class="button" id="paper">Paper</button>
+            <button class="button" id="scissors">Scissors</button>
+        </div>
+        <div id="message-box"></div>
+    </div>
+
+    <script>
+        let playerScore = 0;
+        let computerScore = 0;
+        const resultDisplay = document.getElementById('result');
+        const playerScoreDisplay = document.getElementById('player-score');
+        const computerScoreDisplay = document.getElementById('computer-score');
+        const rockButton = document.getElementById('rock');
+        const paperButton = document.getElementById('paper');
+        const scissorsButton = document.getElementById('scissors');
+        const messageBox = document.getElementById('message-box');
+
+        const choices = ['rock', 'paper', 'scissors'];
+
+        rockButton.addEventListener('click', () => {
+            playRound('rock');
+        });
+        paperButton.addEventListener('click', () => {
+            playRound('paper');
+        });
+        scissorsButton.addEventListener('click', () => {
+            playRound('scissors');
+        });
+
+        function playRound(playerChoice) {
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            let result = '';
+
+            if (playerChoice === computerChoice) {
+                result = "It's a tie!";
+            } else if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                result = 'You win!';
+                playerScore++;
+                playerScoreDisplay.textContent = playerScore;
+            } else {
+                result = 'Computer wins!';
+                computerScore++;
+                computerScoreDisplay.textContent = computerScore;
+            }
+            displayMessage(`You chose ${playerChoice}. Computer chose ${computerChoice}. ${result}`);
+            resultDisplay.textContent = result;
+        }
+
+        function displayMessage(message) {
+            messageBox.textContent = message;
+            messageBox.classList.add('show-message');
+
+            setTimeout(() => {
+                messageBox.classList.remove('show-message');
+                messageBox.classList.add('fade-out');
+                setTimeout(()=> {
+                    messageBox.classList.remove('fade-out');
+                }, 300);
+
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
